@@ -1,0 +1,11 @@
+select sysdate from dual;
+select next_day(sysdate,'Saturday')Difference from dual;
+select Months_between('24-oct-2017',sysdate)Total_Months from dual;
+select add_months(sysdate,6) from dual;
+select last_day(sysdate)from dual;
+select (sysdate+15) from dual;
+select to_char(sysdate, 'ddspth month year am') from dual;
+select to_char(sysdate,'dd "of" month') from dual;
+select to_char(sysdate,'ddspth') from dual;
+select to_date('010717','dd-mm-yy') from dual;
+select lpad(cgpa,10,'*') from Jmen;

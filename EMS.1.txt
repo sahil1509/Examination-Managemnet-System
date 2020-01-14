@@ -1,0 +1,20 @@
+1.desc Jmen
+2.select * from user_cons_constraints
+where table_name='JMEN';
+3.alter table jmen drop constraint CON_UNK
+4.alter table Jmen drop constraint co_fk foreign key(rollno) references s(sno); 
+5.alter table Jmen drop constraint co_fk;
+6.alter table jmen modify Name char(20);
+7.alter table jmen add COMM varchar2(20);
+8.alter table jmen add COmm varchar2(20);
+9.alter table jmen drop column comm;
+10.create table cmen as(select * from jmen);
+11.create table cmen(Sname,Sno,Location,Salary,Interest,Speciality,Sex,Mass) as select * from Jmen;
+12.select * from jmen;
+update Jmen
+set Name='Sai Siddharth'
+where RollNo=101603292
+13.delete from jmen
+where Name='HIMANSHU';
+14.drop table s;
+15.drop table jmen;

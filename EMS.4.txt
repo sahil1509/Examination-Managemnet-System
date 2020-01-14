@@ -1,0 +1,73 @@
+create table Department
+(
+Dno number constraint pk_dept primary key ,
+Location varchar2(20),
+Dname varchar2(20)
+)
+
+************************************
+
+create table Subject
+(
+Sname varchar2(20),
+Sub_id number constraint pk_sub primary key,
+Sub_credit number
+)
+
+
+************************************
+
+
+create table Faculty
+(
+Fac_id number constraint pk_fac primary key,
+Fac_Name varchar2(20),
+Experience varchar2(20),
+Dno number references Department(Dno),
+Sub_id number  references Subject(Sub_id)
+)
+************************************
+
+
+create table Student
+(
+Sname varchar2(20),
+Roll_No number(20) constraint pk_Stud primary key,
+Dno number(20)  references Department(Dno)
+)
+
+************************************
+
+create table Exam
+(
+Exam_id number constraint pk_Exam primary key,
+Exam_room number,
+Exam_date date
+)
+
+*************************************
+
+create table result
+(
+Result_id number constraint pk_res_id primary key,
+Marks number ,
+Exam_id references Exam(Exam_id)
+)
+
+**************************************
+
+create table sits_in
+(
+Roll_No references Student(Roll_No),
+Exam_id references Exam(Exam_id)
+)
+
+
+**************************************
+
+
+create table Student_Contact_No
+(
+Contact_No number constraint pk_scn primary key,
+Roll_No number references Student(Roll_No)
+)

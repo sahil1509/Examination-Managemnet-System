@@ -1,0 +1,11 @@
+//Cursor to display the names of faculty members belonging to a particular department
+
+set serveroutput on;
+set verify off;
+declare 
+CURSOR C1(N number) IS select Fac_name from Faculty where Dno=N;
+begin
+for variable in C1(&N) loop
+dbms_output.put_line('The faculty name is' || variable.Fac_name);
+end loop;
+end;

@@ -1,0 +1,243 @@
+set serveroutput on;
+set verify off;
+declare 
+Dept_no Department.Dno%type:='&Enter_the_department_no';
+Dept_name Department.Dname%type:='&Enter_the_department_name';
+location Department.Location%type:='&Enter_the_location'; 
+PK_DEPT Exception; 
+Pragma Exception_Init(PK_DEPT,-00001);
+begin
+insert into department values(Dept_no,Dept_name,location);
+commit;
+Exception
+when PK_DEPT then
+dbms_output.put_line('Department no is unique');
+end;
+
+***********************************
+
+set serveroutput on;
+set verify off;
+declare
+Fac_id1 Faculty.Fac_Id%type:=&Enter_faculty_id;
+Experience Faculty.Experience%type:='&Enter_faculty_experience';
+Fac_name Faculty.Fac_name%type:='&Enter_faculty_name';
+Dno1 Faculty.Dno%type:='&Enter_dept_no';
+Sub_id Faculty.sub_id%type:=&Enter_sub_id;
+begin
+insert into Faculty values(Fac_id1,Experience,Fac_name,Dno1,Sub_id);
+commit;
+end;
+
+************************************
+
+set serveroutput on;
+set verify off;
+declare
+Sub_id1 Subject.Sub_id%type:=&Enter_the_Sub_id;
+Sname Subject.Sname%type:='&Enter_subject_name';
+Subject_credit1 Subject.Sub_credit%type:=&Enter_the_credits;
+begin
+insert into Subject values(Sname,Sub_id1,Subject_credit1);
+commit;
+end;
+
+*************************************
+
+
+set serveroutput on;
+set verify off;
+declare
+Roll_No Student.Roll_No%type:=&Enter_roll_no;
+Stu_name Student.Stu_name%type:='&Enter_the_name';
+Dno Student.Dno%type:=&Enter_dno;
+begin
+insert into Student values(Roll_No,Stu_name,Dno);
+commit;
+end;
+
+*************************************
+
+
+set serveroutput on;
+set verify off;
+declare
+Exam_id Exam.Exam_id%type:=&Enter_exam_id;
+Exam_room1 Exam.Exam_room%type:='&Enter_the_room_no';
+Exam_date Exam.Exam_date%type:='&Enter_date';
+begin
+insert into Exam values(Exam_id,Exam_room1,Exam_date);
+commit;
+end;
+*************************************
+set serveroutput on;
+set verify off;
+declare
+Error Exception;
+Marks Result.Marks%type:=&Enter_the_Marks;
+Exam_id Result.Exam_id%type:=&Enter_exam_id;
+Roll_No Result.Roll_No%type:=&Enter_roll_no;
+
+begin
+if Marks<0 then
+Raise Error;
+Else
+insert into result values(Marks,Exam_id,Roll_no);
+commit;
+end if;
+Exception 
+when Error then
+dbms_output.put_line('Not valid data');
+when OTHERS then
+dbms_output.put_line('other errors');
+end;
+
+*************************************
+
+set serveroutput on;
+set verify off;
+declare
+Exam_id Sits_in.Exam_id%type:=&Enter_exam_id;
+Roll_No Sits_in.Roll_No%type:=&Enter_Roll_No;
+begin
+insert into Student values(Exam_id,Roll_No);
+commit;
+end;
+
+**************************************
+
+
+set serveroutput on;
+set verify off;
+declare
+Contact_no Student_Contact_No.Contact_no%type:=&Enter_Contact_no;
+Roll_No Student_Contact_No.Roll_No%type:=&Enter_Roll_No;
+begin
+insert into Student values(Contact_no,Roll_No);
+commit;
+end;
+........................................................
+
+alter table result drop constraint eid_roll_no_pk;
+alter table result add constraint eid_roll_no_pk PRIMARY KEY(EXAM_ID,ROLL_NO);
+
+***************************************
+
+CURSORS:
+
+***************************************
+set serveroutput on;
+set verify off;
+declare 
+roll number(10):=&enter_roll_no;
+cursor c1 is select * from result where roll_no=roll;
+begin
+DBMS_OUTPUT.PUT_LINE('EXAM_ID '||':'||'MARKS '||'for '||roll);
+for each in c1 loop
+DBMS_OUTPUT.PUT_LINE( '  '|| each.EXAM_ID  || '    :      '||each.MARKS);
+end loop;
+end;
+
+
+****************************************
+
+TRIGGERS:
+
+****************************************
+CREATE OR REPLACE TRIGGER Exam_SUNDAY
+BEFORE INSERT OR UPDATE OR DELETE ON Exam
+BEGIN
+IF RTRIM(UPPER(TO_CHAR(SYSDATE,'DAY')))='SUNDAY' THEN
+RAISE_APPLICATION_ERROR(-20022,'NO OPERARTION CAN BE PERFORMED SUNDAY');
+END IF;
+END;
+
+****************************************
+set serveroutput on;
+set verify off;
+declare
+roll number;
+bonus_marks number;
+exam_id number;
+score number;
+Error Exception;
+Procedure Bonus(roll number,bonus_no number,e_id number) IS
+
+begin
+Select marks into score from Result
+where Roll_No=roll AND Exam_id=e_id;
+if score<0 then
+raise Error;
+elsif score>0 AND score<33 then
+update result
+set marks=marks+bonus_no
+where Roll_no=roll;
+else 
+dbms_output.put_line('No bonus Dude');
+end if;
+Exception
+when NO_DATA_FOUND then
+dbms_output.put_line('No such roll_no');
+when error then
+Dbms_output.put_line('Not possible');
+end Bonus;
+Begin
+roll :=&roll;
+bonus_marks :=&bonus_marks;
+exam_id:=&exam_id;
+Bonus(roll,bonus_marks,exam_id);
+end;
+
+
+*******************************************
+
+create procedure Del(Roll IN number) AS
+begin
+delete from Student 
+where Roll_No=Roll;
+end;
+
+********************************************
+
+//Code for calling del procedure
+
+Declare 
+N number:=&Enter_the_roll_no;
+begin
+del(N);
+end;
+
+select * from Department;
+select * from Faculty;
+select * from Student;
+select * from Subject;
+select * from Exam;
+select * from Result;
+select * from Sits_in;
+select * from Student_contact_no;
+
+
+********************************************
+
+select * from Result;
+set serveroutput on;
+set verify off;
+declare
+Error Exception;
+Marks Result.Marks%type:=&Enter_the_Marks;
+Exam_id Result.Exam_id%type:=&Enter_exam_id;
+Roll_No Result.Roll_No%type:=&Enter_roll_no;
+
+begin
+if Marks<0 then
+Raise Error;
+Else
+insert into result values(Marks,Exam_id,Roll_no);
+commit;
+end if;
+Exception 
+when Error then
+dbms_output.put_line('Not valid data');
+when OTHERS then
+dbms_output.put_line('other errors');
+end;
